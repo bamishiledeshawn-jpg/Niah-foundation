@@ -1,0 +1,78 @@
+/* Leaflet core styles — must come before Tailwind layers */
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-body overflow-x-hidden;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@layer components {
+  .organic-shape {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  .glass-card {
+    background: rgba(251, 249, 245, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(141, 170, 145, 0.2);
+  }
+
+  .page-section {
+    @apply py-20 px-10 max-w-container-max mx-auto;
+  }
+
+  .section-eyebrow {
+    @apply inline-block bg-primary-fixed text-on-primary-fixed px-4 py-1 rounded-full text-xs font-semibold tracking-widest uppercase mb-5;
+  }
+
+  .section-title {
+    @apply font-display text-3xl md:text-4xl text-on-surface font-bold leading-tight;
+  }
+
+  .section-body {
+    @apply text-on-surface-variant text-lg leading-relaxed;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-on-primary px-8 py-3 rounded-full text-sm font-semibold tracking-widest uppercase
+      hover:shadow-lg hover:opacity-90 active:scale-95 transition-all;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-secondary text-secondary px-8 py-3 rounded-full text-sm font-semibold tracking-widest uppercase
+      hover:bg-secondary/5 active:scale-95 transition-all;
+  }
+
+  .btn-donate {
+    @apply bg-secondary text-on-secondary px-6 py-2 rounded-full text-xs font-semibold tracking-widest uppercase
+      hover:opacity-90 active:scale-95 transition-all;
+  }
+
+  .card {
+    @apply bg-surface rounded-2xl border border-outline-variant/30 hover:border-primary/40 transition-all;
+  }
+
+  .card-container-low {
+    @apply bg-surface-container-low rounded-3xl;
+  }
+}
+
+/* ── Leaflet z-index fix — keeps map behind the fixed navbar ── */
+.leaflet-container {
+  z-index: 0;
+}
+
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0;
+}

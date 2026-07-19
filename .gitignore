@@ -1,0 +1,4 @@
+node_modules/
+niah.db
+.env
+dist/
