@@ -11,7 +11,7 @@ export default function PageHero({ eyebrow, title, subtitle, imgSrc, imgAlt }) {
         ) : (
           <div className="w-full h-full bg-primary-fixed/40" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/[86.5%] via-background/[61.5%] to-transparent" />
       </div>
       <div className="relative z-10 max-w-container-max mx-auto px-10 w-full">
         <span className="section-eyebrow">{eyebrow}</span>

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import PageHero from '../components/PageHero'
 import DonateStrip from '../components/DonateStrip'
 
@@ -8,14 +9,73 @@ const VALUES = [
   { icon: 'lock_open', title: 'Access for All',      body: 'No one should be turned away due to financial barriers. We work to eliminate cost as an obstacle.' },
 ]
 
+// TODO: swap these placeholder photos + captions for real ones per credential
+const CREDENTIALS = [
+  {
+    tag: 'HR Consultant',
+    photo: '/images/community-photo.jpg',
+    caption: 'Years of HR consulting experience inform how Niah builds and supports its volunteer teams.',
+  },
+  {
+    tag: 'Mental Health Advocate',
+    photo: '/images/about-hero.jpg',
+    caption: 'Advocating for accessible, stigma-free mental health care across underserved communities.',
+  },
+  {
+    tag: 'Youth Leader',
+    photo: '/images/story-photo.jpg',
+    caption: 'Leading youth-focused programs that build life skills and long-term resilience.',
+  },
+  {
+    tag: 'Volunteer',
+    photo: '/images/team-photo.jpg',
+    caption: 'Hands-on in the field alongside the Niah team at every outreach event.',
+  },
+]
+
+function CredentialTag({ item, isOpen, onToggle }) {
+  return (
+    <div className="relative">
+      <button
+        onClick={onToggle}
+        className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 ${
+          isOpen
+            ? 'bg-primary text-on-primary shadow-lg shadow-primary/40'
+            : 'bg-primary-fixed/50 text-on-primary-fixed hover:bg-primary-fixed/80 hover:shadow-md hover:shadow-primary/30'
+        }`}
+      >
+        {item.tag}
+      </button>
+
+      {/* Popover */}
+      <div
+        className={`absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-3 w-64
+                    origin-bottom transition-all duration-300 ease-out
+                    ${isOpen
+                      ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                      : 'opacity-0 scale-90 translate-y-2 pointer-events-none'}`}
+      >
+        <div className="bg-surface rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
+          <img src={item.photo} alt={item.tag} className="w-full h-32 object-cover" />
+          <p className="text-on-surface-variant text-xs leading-relaxed p-4">{item.caption}</p>
+        </div>
+        {/* Little pointer triangle */}
+        <div className="w-3 h-3 bg-surface border-r border-b border-outline-variant/30 rotate-45 mx-auto -mt-1.5" />
+      </div>
+    </div>
+  )
+}
+
 export default function About() {
+  const [openTag, setOpenTag] = useState(null)
+
   return (
     <>
       <PageHero
         eyebrow="ABOUT US"
         title="Who we are and why we exist."
         subtitle="Niah Foundation was born from a recognition of the silent crisis of mental health in Nigeria and a determination to act."
-        imgSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBKpUBpJIE-TNn3ddrG8cEqN_QphDMDYm04UtF-FSD2T9Xt7hBNHktUCJksrB3CnFk4PqQpBF0nLzpn1YTvqyChfbON15_KcgM0y2S8PUGRmQF8q2-0cCRAvSOyEfkZuQqGpDC9ia3pQ6QmFVmEzOl5BpEih82ycH0cM5aFShRSwUEIDmYiA0V0_sz6d4YJAmJleBhKdi8EnYK3tLIwIHRWvTL2EEgJBBt_JE9p9rRozhvQoXJkMz_C4zW-vgRn-SK3aF3BkEQ21Us"
+        imgSrc="/images/about-hero.jpg"
       />
 
       {/* Story */}
@@ -47,8 +107,8 @@ export default function About() {
               <div className="organic-shape bg-secondary-fixed/40 absolute inset-0 rotate-6" />
               <img
                 className="relative z-10 w-full h-[460px] object-cover rounded-[40px] shadow-2xl"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCE_QyD64kTKyrEkld8Si6Y8MdJ73tF0tthNW4XrulJtecH5VUMbmGzKjHoqFLWur-BvnWoHJjuJMafx2lavSIFAH6T9hxWbkdy2d8wm9Ro19jhqodfLdlq6zFxdupe_61Fwb-DX95b7wlutcDsBSW6whZDG2Zcx12_xSr0undTFs42F6LhDc-epm_SW06XvWCpe_IZbvv3ozPIJUgAoxxPJ3aMl3Lins9Dpf_-BPnW3qury4RXJ8ZtUYROj4tuwPtWy8dcXkojHo"
-                alt="Foundation work in progress"
+                src="/images/story-photo.jpg"
+                alt="Niah Foundation team at community event"
               />
             </div>
           </div>
@@ -62,28 +122,15 @@ export default function About() {
             <span className="section-eyebrow">THE FOUNDER</span>
             <h2 className="section-title mb-12">Meet Chenaniah Bamishile.</h2>
 
-            {/* Portrait placeholder */}
+            {/* Portrait */}
             <div className="relative mx-auto mb-10 w-64 h-80 md:w-80 md:h-96">
               <div className="organic-shape bg-primary-fixed/30 absolute inset-0" />
-              <div className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl bg-surface-container-high flex flex-col items-center justify-end">
-                {/* Silhouette placeholder */}
-                <svg
-                  viewBox="0 0 200 260"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl">
+                <img
+                  src="/images/founder.jpg"
+                  alt="Chenaniah Bamishile, Founder & Executive Director"
                   className="w-full h-full object-cover"
-                  style={{ background: 'linear-gradient(160deg, #cceacf 0%, #8daa91 100%)' }}
-                >
-                  {/* Head */}
-                  <circle cx="100" cy="85" r="38" fill="rgba(255,255,255,0.25)" />
-                  {/* Shoulders / body */}
-                  <ellipse cx="100" cy="200" rx="72" ry="70" fill="rgba(255,255,255,0.18)" />
-                </svg>
-                {/* Placeholder label */}
-                <div className="absolute bottom-4 left-0 right-0 text-center">
-                  <span className="bg-surface/80 backdrop-blur-sm text-on-surface-variant text-xs font-semibold px-4 py-1.5 rounded-full">
-                    Photo coming soon
-                  </span>
-                </div>
+                />
               </div>
             </div>
 
@@ -102,17 +149,18 @@ export default function About() {
                 youth leader, ensures that the foundation remains at the forefront of mental health advocacy.
               </p>
 
-              {/* Credential tags */}
+              {/* Credential tags — click to reveal photo + caption */}
               <div className="flex flex-wrap gap-3 pt-2">
-                {['HR Consultant', 'Mental Health Advocate', 'Youth Leader', 'Volunteer'].map(tag => (
-                  <span
-                    key={tag}
-                    className="bg-primary-fixed/50 text-on-primary-fixed text-xs font-semibold px-4 py-1.5 rounded-full"
-                  >
-                    {tag}
-                  </span>
+                {CREDENTIALS.map(item => (
+                  <CredentialTag
+                    key={item.tag}
+                    item={item}
+                    isOpen={openTag === item.tag}
+                    onToggle={() => setOpenTag(prev => (prev === item.tag ? null : item.tag))}
+                  />
                 ))}
               </div>
+              <p className="text-on-surface-variant/60 text-xs pt-1">Tap a tag to see more.</p>
             </div>
           </div>
         </div>

@@ -29,9 +29,9 @@ export default function Home() {
       <section className="relative h-[85vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
-            className="w-full h-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKpUBpJIE-TNn3ddrG8cEqN_QphDMDYm04UtF-FSD2T9Xt7hBNHktUCJksrB3CnFk4PqQpBF0nLzpn1YTvqyChfbON15_KcgM0y2S8PUGRmQF8q2-0cCRAvSOyEfkZuQqGpDC9ia3pQ6QmFVmEzOl5BpEih82ycH0cM5aFShRSwUEIDmYiA0V0_sz6d4YJAmJleBhKdi8EnYK3tLIwIHRWvTL2EEgJBBt_JE9p9rRozhvQoXJkMz_C4zW-vgRn-SK3aF3BkEQ21Us"
-            alt="Community members in a supportive circle"
+            className="w-full h-full object-cover object-[center_57.56%]"
+            src="/images/hero-outreach.jpg"
+            alt="Niah Foundation team at community outreach event"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-transparent" />
         </div>
@@ -56,8 +56,24 @@ export default function Home() {
       </section>
 
       {/* Impact stats */}
-      <section className="bg-surface-container py-20">
-        <div className="max-w-container-max mx-auto px-10">
+      <section className="bg-surface-container py-20 relative overflow-hidden">
+        <svg className="absolute z-0" style={{ left: '6%', top: '12%' }} width="40" height="40" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#f7d08a' : '#fce0a8'} transform={`rotate(${(i * 360) / 5 + 20} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#f7d08a" opacity={0.5} />
+        </svg>
+        <svg className="absolute z-0" style={{ left: '92%', top: '20%' }} width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#c3aed6' : '#d4c4e8'} transform={`rotate(${(i * 360) / 5 + 60} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#c3aed6" opacity={0.5} />
+        </svg>
+        <svg className="absolute z-0" style={{ left: '48%', top: '85%' }} width="50" height="50" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#f9a8c9' : '#f4c2d4'} transform={`rotate(${(i * 360) / 5 + 100} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#f9a8c9" opacity={0.5} />
+        </svg>
+        <svg className="absolute z-0" style={{ left: '18%', top: '78%' }} width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#a8d8ea' : '#c4e8f4'} transform={`rotate(${(i * 360) / 5 + 140} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#a8d8ea" opacity={0.5} />
+        </svg>
+        <div className="max-w-container-max mx-auto px-10 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             {STATS.map(({ icon, value, label, color }) => (
               <div key={value} className="card p-10">
@@ -75,60 +91,76 @@ export default function Home() {
       {/* Mission, Vision & Objectives */}
       <section className="py-20">
         <div className="max-w-container-max mx-auto px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="relative">
-              <div className="organic-shape bg-primary-fixed/30 absolute inset-0 -rotate-6" />
-              <img
-                className="relative z-10 w-full h-[480px] object-cover rounded-[40px] shadow-2xl"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCE_QyD64kTKyrEkld8Si6Y8MdJ73tF0tthNW4XrulJtecH5VUMbmGzKjHoqFLWur-BvnWoHJjuJMafx2lavSIFAH6T9hxWbkdy2d8wm9Ro19jhqodfLdlq6zFxdupe_61Fwb-DX95b7wlutcDsBSW6whZDG2Zcx12_xSr0undTFs42F6LhDc-epm_SW06XvWCpe_IZbvv3ozPIJUgAoxxPJ3aMl3Lins9Dpf_-BPnW3qury4RXJ8ZtUYROj4tuwPtWy8dcXkojHo"
-                alt="Specialist working with a child"
-              />
-            </div>
-            <div className="space-y-8">
-              <div className="card-container-low p-8 border-l-4 border-primary">
-                <h3 className="font-display text-2xl text-primary mb-4 flex items-center gap-3">
-                  <span className="material-symbols-outlined">visibility</span> Our Vision
-                </h3>
-                <p className="text-on-surface-variant text-lg leading-relaxed">
-                  To create an inclusive society where mental health is prioritized, and every individual with
-                  special needs is empowered to reach their full potential without stigma.
-                </p>
-              </div>
-
-              <div className="card-container-low p-8 border-l-4 border-secondary">
-                <h3 className="font-display text-2xl text-secondary mb-4 flex items-center gap-3">
-                  <span className="material-symbols-outlined">target</span> Our Mission
-                </h3>
-                <p className="text-on-surface-variant text-lg leading-relaxed">
-                  We are dedicated to providing accessible mental health resources, early intervention for
-                  children with special needs, and fostering community support through sustainable action.
-                </p>
-              </div>
-
-              <div className="card-container-low p-8 border-l-4 border-tertiary">
-                <h3 className="font-display text-2xl text-tertiary mb-5 flex items-center gap-3">
-                  <span className="material-symbols-outlined">flag</span> Objectives
-                </h3>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    'Raise awareness of mental health in underrepresented communities.',
-                    'Champion the inclusion of special needs individuals.',
-                    'Build collaborative systems of care and support.',
-                  ].map((obj) => (
-                    <li key={obj} className="flex items-start gap-3 text-on-surface-variant text-base leading-relaxed">
-                      <span className="material-symbols-outlined text-tertiary text-base mt-0.5 shrink-0">check_circle</span>
-                      {obj}
-                    </li>
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div className="relative py-6">
+                <div className="organic-shape bg-primary-fixed/30 absolute inset-0 -rotate-6" />
+                <svg className="absolute -bottom-6 -left-6 z-[1]" width="70" height="70" viewBox="0 0 100 100" aria-hidden="true">
+                  {[0,1,2,3,4].map((i) => (
+                    <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#f9a8c9' : '#f4c2d4'} transform={`rotate(${(i * 360) / 5} 50 50)`} />
                   ))}
-                </ul>
-                <div className="bg-tertiary-fixed/30 rounded-2xl px-5 py-4">
-                  <p className="text-on-surface text-sm leading-relaxed">
-                    <span className="font-semibold text-tertiary">Did you know?</span>{' '}
-                    The Niah Foundation has benefited over 1,000 people, transforming lives across Nigeria,
-                    supporting over 300 women — including widows and survivors of domestic violence — through
-                    mental health resources, food donation drives, and empowerment programs.
+                  <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} />
+                  <circle cx={50} cy={50} r={7} fill="#f9a8c9" opacity={0.5} />
+                </svg>
+                <svg className="absolute -top-5 -right-5 z-[1]" width="50" height="50" viewBox="0 0 100 100" aria-hidden="true">
+                  {[0,1,2,3,4].map((i) => (
+                    <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#a8d8ea' : '#c4e8f4'} transform={`rotate(${(i * 360) / 5} 50 50)`} />
+                  ))}
+                  <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} />
+                  <circle cx={50} cy={50} r={7} fill="#a8d8ea" opacity={0.5} />
+                </svg>
+                <img
+                  className="relative z-10 w-full h-[420px] object-cover rounded-[40px] shadow-2xl"
+                  src="/images/community-photo.jpg"
+                  alt="Niah Foundation community outreach"
+                />
+              </div>
+              <div className="space-y-8">
+                <div className="card-container-low p-8 border-l-4 border-primary">
+                  <h3 className="font-display text-2xl text-primary mb-4 flex items-center gap-3">
+                    <span className="material-symbols-outlined">visibility</span> Our Vision
+                  </h3>
+                  <p className="text-on-surface-variant text-lg leading-relaxed">
+                    To create an inclusive society where mental health is prioritized, and every individual with
+                    special needs is empowered to reach their full potential without stigma.
                   </p>
                 </div>
+
+                <div className="card-container-low p-8 border-l-4 border-secondary">
+                  <h3 className="font-display text-2xl text-secondary mb-4 flex items-center gap-3">
+                    <span className="material-symbols-outlined">target</span> Our Mission
+                  </h3>
+                  <p className="text-on-surface-variant text-lg leading-relaxed">
+                    We are dedicated to providing accessible mental health resources, early intervention for
+                    children with special needs, and fostering community support through sustainable action.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="card-container-low p-8 border-l-4 border-tertiary">
+              <h3 className="font-display text-2xl text-tertiary mb-5 flex items-center gap-3">
+                <span className="material-symbols-outlined">flag</span> Objectives
+              </h3>
+              <ul className="space-y-3 mb-6">
+                {[
+                  'Raise awareness of mental health in underrepresented communities.',
+                  'Champion the inclusion of special needs individuals.',
+                  'Build collaborative systems of care and support.',
+                ].map((obj) => (
+                  <li key={obj} className="flex items-start gap-3 text-on-surface-variant text-base leading-relaxed">
+                    <span className="material-symbols-outlined text-tertiary text-base mt-0.5 shrink-0">check_circle</span>
+                    {obj}
+                  </li>
+                ))}
+              </ul>
+              <div className="bg-tertiary-fixed/30 rounded-2xl px-5 py-4">
+                <p className="text-on-surface text-sm leading-relaxed">
+                  <span className="font-semibold text-tertiary">Did you know?</span>{' '}
+                  The Niah Foundation has benefited over 1,000 people, transforming lives across Nigeria,
+                  supporting over 300 women — including widows and survivors of domestic violence — through
+                  mental health resources, food donation drives, and empowerment programs.
+                </p>
               </div>
             </div>
           </div>
@@ -137,8 +169,20 @@ export default function Home() {
 
 
       {/* Meet the Team */}
-      <section className="py-20 bg-surface-container">
-        <div className="max-w-container-max mx-auto px-10">
+      <section className="py-20 bg-surface-container relative overflow-hidden">
+        <svg className="absolute z-0" style={{ left: '88%', top: '10%' }} width="36" height="36" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#8daa91' : '#a8c4ac'} transform={`rotate(${(i * 360) / 5 + 30} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#8daa91" opacity={0.5} />
+        </svg>
+        <svg className="absolute z-0" style={{ left: '4%', top: '85%' }} width="44" height="44" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#e8c4b8' : '#f0d4cc'} transform={`rotate(${(i * 360) / 5 + 80} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#e8c4b8" opacity={0.5} />
+        </svg>
+        <svg className="absolute z-0" style={{ left: '55%', top: '6%' }} width="24" height="24" viewBox="0 0 100 100" aria-hidden="true">
+          {[0,1,2,3,4].map((i) => <ellipse key={i} cx={50} cy={28} rx={12} ry={24} fill={i % 2 === 0 ? '#f4a261' : '#f7bc8a'} transform={`rotate(${(i * 360) / 5 + 160} 50 50)`} />)}
+          <circle cx={50} cy={50} r={12} fill="#fff" opacity={0.9} /><circle cx={50} cy={50} r={7} fill="#f4a261" opacity={0.5} />
+        </svg>
+        <div className="max-w-container-max mx-auto px-10 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
             {/* Photo */}
