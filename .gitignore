@@ -2,3 +2,4 @@ node_modules/
 niah.db
 .env
 dist/
+*:Zone.Identifier
