@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PageHero from '../components/PageHero'
 import DonateStrip from '../components/DonateStrip'
 
@@ -9,65 +9,171 @@ const VALUES = [
   { icon: 'lock_open', title: 'Access for All',      body: 'No one should be turned away due to financial barriers. We work to eliminate cost as an obstacle.' },
 ]
 
-// TODO: swap these placeholder photos + captions for real ones per credential
+// TODO: swap these placeholder video paths + captions for real short clips per credential
+// Drop .mp4 files into niah/public/videos/ and update the `video` field below.
 const CREDENTIALS = [
   {
     tag: 'HR Consultant',
-    photo: '/images/community-photo.jpg',
+    video: '/videos/hr-consultant.mp4',
+    poster: '/images/community-photo.jpg',
     caption: 'Years of HR consulting experience inform how Niah builds and supports its volunteer teams.',
   },
   {
     tag: 'Mental Health Advocate',
-    photo: '/images/about-hero.jpg',
+    video: '/videos/mental-health-advocate.mp4',
+    poster: '/images/about-hero.jpg',
     caption: 'Advocating for accessible, stigma-free mental health care across underserved communities.',
   },
   {
     tag: 'Youth Leader',
-    photo: '/images/story-photo.jpg',
+    video: '/videos/youth-leader.mp4',
+    poster: '/images/story-photo.jpg',
     caption: 'Leading youth-focused programs that build life skills and long-term resilience.',
   },
   {
     tag: 'Volunteer',
-    photo: '/images/team-photo.jpg',
+    video: '/videos/volunteer.mp4',
+    poster: '/images/team-photo.jpg',
     caption: 'Hands-on in the field alongside the Niah team at every outreach event.',
   },
 ]
 
-function CredentialTag({ item, isOpen, onToggle }) {
+function CredentialTag({ item, isSource, isGlowing, buttonRef, onOpen }) {
   return (
-    <div className="relative">
-      <button
-        onClick={onToggle}
-        className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-300 ${
-          isOpen
-            ? 'bg-primary text-on-primary shadow-lg shadow-primary/40'
-            : 'bg-primary-fixed/50 text-on-primary-fixed hover:bg-primary-fixed/80 hover:shadow-md hover:shadow-primary/30'
-        }`}
-      >
-        {item.tag}
-      </button>
+    <button
+      ref={buttonRef}
+      onClick={() => onOpen(item)}
+      className={`relative text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-200 ${
+        isSource
+          ? 'opacity-0'
+          : 'bg-primary-fixed/50 text-on-primary-fixed hover:bg-primary-fixed/80 hover:shadow-lg hover:shadow-primary/40'
+      }`}
+    >
+      {/* Pulsing glow ring — nudges attention when section enters view, like a "subscribe" cue */}
+      {isGlowing && !isSource && (
+        <span className="absolute inset-0 rounded-full animate-ping-slow bg-primary/50 -z-10" />
+      )}
+      {item.tag}
+    </button>
+  )
+}
 
-      {/* Popover */}
+// Morphs from the clicked tag's exact position/size into a centered detail card.
+// Sits below the navbar (z-40 vs navbar's z-50) with top padding, so it never
+// visually touches or overlaps the header.
+function MorphCard({ item, startRect, onClose }) {
+  const [phase, setPhase] = useState('start') // 'start' -> 'end'
+  const NAV_GAP = 96 // px reserved below the fixed navbar
+
+  const finalStyle = {
+    top: `calc(${NAV_GAP}px + (100vh - ${NAV_GAP}px) / 2)`,
+    left: '50%',
+    width: 'min(560px, 92vw)',
+    height: `min(560px, calc(90vh - ${NAV_GAP}px))`,
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '2rem',
+  }
+  const startStyle = startRect ? {
+    top: startRect.top, left: startRect.left,
+    width: startRect.width, height: startRect.height,
+    transform: 'translate(0, 0)',
+    borderRadius: '9999px',
+  } : finalStyle
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setPhase('end'))
+    function onKey(e) { if (e.key === 'Escape') handleClose() }
+    window.addEventListener('keydown', onKey)
+    return () => { cancelAnimationFrame(id); window.removeEventListener('keydown', onKey) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function handleClose() {
+    setPhase('start')
+    setTimeout(onClose, 350)
+  }
+
+  const style = phase === 'end' ? finalStyle : startStyle
+
+  return (
+    <div className="fixed inset-0 z-40" style={{ top: NAV_GAP }}>
       <div
-        className={`absolute z-20 bottom-full left-1/2 -translate-x-1/2 mb-3 w-64
-                    origin-bottom transition-all duration-300 ease-out
-                    ${isOpen
-                      ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
-                      : 'opacity-0 scale-90 translate-y-2 pointer-events-none'}`}
+        className={`absolute inset-0 bg-on-surface/60 backdrop-blur-sm transition-opacity duration-300 ${
+          phase === 'end' ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ top: -NAV_GAP }}
+        onClick={handleClose}
+      />
+      <div
+        className="fixed bg-surface shadow-2xl overflow-hidden transition-all duration-[450ms]"
+        style={{ ...style, transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
       >
-        <div className="bg-surface rounded-2xl shadow-2xl border border-outline-variant/30 overflow-hidden">
-          <img src={item.photo} alt={item.tag} className="w-full h-32 object-cover" />
-          <p className="text-on-surface-variant text-xs leading-relaxed p-4">{item.caption}</p>
+        <div
+          className={`h-full flex flex-col transition-opacity duration-200 ${
+            phase === 'end' ? 'opacity-100 delay-[250ms]' : 'opacity-0'
+          }`}
+        >
+          <div className="relative shrink-0">
+            <video
+              src={item.video}
+              poster={item.poster}
+              className="w-full h-64 object-cover bg-on-surface/10"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 bg-surface/90 backdrop-blur-sm rounded-full p-2
+                         text-on-surface hover:text-primary transition-colors shadow-md"
+              aria-label="Close"
+            >
+              <span className="material-symbols-outlined text-xl block">close</span>
+            </button>
+          </div>
+          <div className="p-8 overflow-y-auto">
+            <span className="section-eyebrow mb-3 inline-block">{item.tag}</span>
+            <p className="text-on-surface-variant text-base leading-relaxed">{item.caption}</p>
+          </div>
         </div>
-        {/* Little pointer triangle */}
-        <div className="w-3 h-3 bg-surface border-r border-b border-outline-variant/30 rotate-45 mx-auto -mt-1.5" />
       </div>
     </div>
   )
 }
 
 export default function About() {
-  const [openTag, setOpenTag] = useState(null)
+  const [active, setActive]       = useState(null)
+  const [startRect, setStartRect] = useState(null)
+  const [glowing, setGlowing]     = useState(false)
+  const btnRefs   = useRef({})
+  const sectionRef = useRef(null)
+
+  // Scroll-triggered attention cue — pulses the tags a few times once the
+  // section enters view, works identically on mobile scroll and desktop.
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setGlowing(true)
+          const timer = setTimeout(() => setGlowing(false), 2400) // ~3 pulses then rest
+          observer.disconnect()
+          return () => clearTimeout(timer)
+        }
+      },
+      { threshold: 0.4 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  function handleOpen(item) {
+    const el = btnRefs.current[item.tag]
+    if (el) setStartRect(el.getBoundingClientRect())
+    setActive(item)
+  }
 
   return (
     <>
@@ -148,23 +254,40 @@ export default function About() {
                 commitment to kindness, alongside her extensive experience as an HR consultant, volunteer, and
                 youth leader, ensures that the foundation remains at the forefront of mental health advocacy.
               </p>
-
-              {/* Credential tags — click to reveal photo + caption */}
-              <div className="flex flex-wrap gap-3 pt-2">
-                {CREDENTIALS.map(item => (
-                  <CredentialTag
-                    key={item.tag}
-                    item={item}
-                    isOpen={openTag === item.tag}
-                    onToggle={() => setOpenTag(prev => (prev === item.tag ? null : item.tag))}
-                  />
-                ))}
-              </div>
-              <p className="text-on-surface-variant/60 text-xs pt-1">Tap a tag to see more.</p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Credential tags — separated from bio, its own moment */}
+      <section ref={sectionRef} className="py-16 bg-surface-container">
+        <div className="max-w-container-max mx-auto px-10 text-center">
+          <span className="section-eyebrow">HER BACKGROUND</span>
+          <h3 className="font-display text-2xl font-bold text-on-surface mt-2 mb-8">
+            Tap to see her impact, up close.
+          </h3>
+          <div className="flex flex-wrap justify-center gap-4">
+            {CREDENTIALS.map(item => (
+              <CredentialTag
+                key={item.tag}
+                item={item}
+                isSource={active?.tag === item.tag}
+                isGlowing={glowing}
+                buttonRef={el => { btnRefs.current[item.tag] = el }}
+                onOpen={handleOpen}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {active && (
+        <MorphCard
+          item={active}
+          startRect={startRect}
+          onClose={() => setActive(null)}
+        />
+      )}
 
       {/* Values */}
       <section className="py-20">
@@ -186,6 +309,17 @@ export default function About() {
       </section>
 
       <DonateStrip />
+
+      <style>{`
+        @keyframes pingSlow {
+          0%   { transform: scale(1);    opacity: 0.6; }
+          70%  { transform: scale(1.35); opacity: 0;   }
+          100% { transform: scale(1.35); opacity: 0;   }
+        }
+        .animate-ping-slow {
+          animation: pingSlow 1.2s cubic-bezier(0,0,0.2,1) 2;
+        }
+      `}</style>
     </>
   )
 }
