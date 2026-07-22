@@ -294,7 +294,7 @@ export default function Events() {
         eyebrow="EVENTS"
         title="Where community turns into change."
         subtitle="From clinical programs to public awareness walks, our events create the connections that sustain mental health support at scale."
-        imgSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBKpUBpJIE-TNn3ddrG8cEqN_QphDMDYm04UtF-FSD2T9Xt7hBNHktUCJksrB3CnFk4PqQpBF0nLzpn1YTvqyChfbON15_KcgM0y2S8PUGRmQF8q2-0cCRAvSOyEfkZuQqGpDC9ia3pQ6QmFVmEzOl5BpEih82ycH0cM5aFShRSwUEIDmYiA0V0_sz6d4YJAmJleBhKdi8EnYK3tLIwIHRWvTL2EEgJBBt_JE9p9rRozhvQoXJkMz_C4zW-vgRn-SK3aF3BkEQ21Us"
+        imgSrc="/images/events-hero.jpg"
       />
 
       {/* ── Map ── */}
