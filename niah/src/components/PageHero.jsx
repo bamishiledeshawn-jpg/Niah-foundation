@@ -11,7 +11,10 @@ export default function PageHero({ eyebrow, title, subtitle, imgSrc, imgAlt }) {
         ) : (
           <div className="w-full h-full bg-primary-fixed/40" />
         )}
+        {/* Left-to-right readability gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/[86.5%] via-background/[61.5%] to-transparent" />
+        {/* Bottom fade — blends the image smoothly into the page below instead of a hard cutoff */}
+        <div className="absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent to-background" />
       </div>
       <div className="relative z-10 max-w-container-max mx-auto px-10 w-full">
         <span className="section-eyebrow">{eyebrow}</span>

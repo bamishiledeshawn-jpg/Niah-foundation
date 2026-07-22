@@ -201,7 +201,7 @@ function ContactForm() {
     'focus:outline-none focus:ring-2 focus:ring-primary/40'
 
   return (
-    <div>
+    <div id="contact-form" className="scroll-mt-28">
       <span className="section-eyebrow">SEND A MESSAGE</span>
       <h2 className="section-title mb-8">Get in touch.</h2>
 

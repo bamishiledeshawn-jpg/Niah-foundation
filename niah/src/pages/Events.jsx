@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import PageHero from '../components/PageHero'
@@ -66,7 +67,7 @@ const PAST_EVENTS = [
     id: 2,
     title: "Medical Outreach (#SarahGoesToSchool)",
     location: "Alagbado, Lagos",
-    year: "2024",
+    year: "2023",
     reach: "150+ beneficiaries",
     fullDescription: "On the 20th of September, we provided medication, free consultations, blood pressure tests and more to about 150 beneficiaries in Alagbado. Our medical outreach became a celebration of hope — Sarah, the daughter of one of our beneficiaries, became the first recipient of our #SarahGoesToSchool campaign. As fate would have it, it was also her birthday, and thanks to the incredible support of our volunteers and donors, we raised enough funds to enroll Sarah in school.",
     images: [
@@ -142,8 +143,8 @@ function PastEventDrawer({ event, onClose }) {
     return () => { document.body.style.overflow = '' }
   }, [])
 
-  return (
-    <div className="fixed inset-0 z-50 flex">
+  return createPortal(
+    <div className="fixed inset-0 z-[200] flex">
       {/* Blurred backdrop */}
       <div
         className="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm"
@@ -156,21 +157,23 @@ function PastEventDrawer({ event, onClose }) {
         className="relative ml-auto h-full w-full max-w-2xl bg-surface shadow-2xl flex flex-col"
         style={{ animation: 'slideInRight 0.3s cubic-bezier(0.16,1,0.3,1)' }}
       >
+        {/* Sticky close button — always on top, works even if icon font fails to load */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-surface-container shadow-md hover:bg-surface-container-high hover:scale-105 transition-all text-on-surface-variant text-xl font-bold"
+          aria-label="Close drawer"
+        >
+          <span aria-hidden="true">✕</span>
+        </button>
+
         {/* Header */}
-        <div className="flex items-start justify-between px-8 pt-8 pb-6 border-b border-outline-variant/30 shrink-0">
+        <div className="flex items-start justify-between px-8 pt-8 pb-6 border-b border-outline-variant/30 shrink-0 pr-20">
           <div>
             <span className="section-eyebrow">{event.year} · {event.location}</span>
             <h2 className="font-display text-2xl font-bold text-on-surface mt-1 leading-tight">
               {event.title}
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            className="ml-4 shrink-0 p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant"
-            aria-label="Close drawer"
-          >
-            <span className="material-symbols-outlined text-2xl">close</span>
-          </button>
         </div>
 
         {/* Scrollable body */}
@@ -257,7 +260,8 @@ function PastEventDrawer({ event, onClose }) {
           to   { transform: translateX(0);    opacity: 1; }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   )
 }
 
@@ -280,6 +284,7 @@ export default function Events() {
       .finally(() => setLoading(false))
   }, [])
 
+  
   const mappable  = mapEvents(events)
   const mapCenter = mappable.length > 0
     ? [
@@ -445,7 +450,7 @@ export default function Events() {
             ))}
           </div>
         </div>
-      </section>
+        </section>
 
       {/* Drawer */}
       {activeDrawer && (

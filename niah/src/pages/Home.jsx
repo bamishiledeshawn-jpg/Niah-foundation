@@ -162,6 +162,9 @@ export default function Home() {
                   mental health resources, food donation drives, and empowerment programs.
                 </p>
               </div>
+              <Link to="/events" className="btn-secondary inline-flex items-center gap-2 mt-6 w-fit">
+                SEE MORE <span className="material-symbols-outlined text-base">arrow_forward</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -235,7 +238,7 @@ export default function Home() {
                     <span className="material-symbols-outlined text-base">favorite</span>
                     DONATE NOW
                   </Link>
-                  <Link to="/volunteer" className="btn-secondary">PARTNER WITH US</Link>
+                  <Link to="/contact#contact-form" className="btn-secondary">PARTNER WITH US</Link>
                 </div>
               </div>
               <div className="bg-surface-container-highest p-8 rounded-2xl border border-outline-variant space-y-5">

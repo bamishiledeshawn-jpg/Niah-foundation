@@ -1,5 +1,5 @@
 import PageHero from '../components/PageHero'
-import DonateStrip from '../components/DonateStrip'
+import ShareStorySection from '../components/ShareStorySection'
 
 const METRICS = [
   { icon: 'groups', value: '3,200+', label: 'Lives directly impacted', color: 'text-primary' },
@@ -126,7 +126,7 @@ export default function Impact() {
         </div>
       </section>
 
-      <DonateStrip />
+      <ShareStorySection />
     </>
   )
 }
