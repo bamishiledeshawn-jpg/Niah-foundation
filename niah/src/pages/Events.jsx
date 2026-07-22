@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import PageHero from '../components/PageHero'
-import DonateStrip from '../components/DonateStrip'
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
 
@@ -447,8 +446,6 @@ export default function Events() {
           </div>
         </div>
       </section>
-
-      <DonateStrip />
 
       {/* Drawer */}
       {activeDrawer && (
