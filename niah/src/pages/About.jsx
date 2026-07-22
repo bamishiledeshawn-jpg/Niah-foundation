@@ -9,33 +9,13 @@ const VALUES = [
   { icon: 'lock_open', title: 'Access for All',      body: 'No one should be turned away due to financial barriers. We work to eliminate cost as an obstacle.' },
 ]
 
-// TODO: swap these placeholder video paths + captions for real short clips per credential
+// TODO: swap these placeholder video paths for real short clips per credential
 // Drop .mp4 files into niah/public/videos/ and update the `video` field below.
 const CREDENTIALS = [
-  {
-    tag: 'HR Consultant',
-    video: '/videos/hr-consultant.mp4',
-    poster: '/images/community-photo.jpg',
-    caption: 'Years of HR consulting experience inform how Niah builds and supports its volunteer teams.',
-  },
-  {
-    tag: 'Mental Health Advocate',
-    video: '/videos/mental-health-advocate.mp4',
-    poster: '/images/about-hero.jpg',
-    caption: 'Advocating for accessible, stigma-free mental health care across underserved communities.',
-  },
-  {
-    tag: 'Youth Leader',
-    video: '/videos/youth-leader.mp4',
-    poster: '/images/story-photo.jpg',
-    caption: 'Leading youth-focused programs that build life skills and long-term resilience.',
-  },
-  {
-    tag: 'Volunteer',
-    video: '/videos/volunteer.mp4',
-    poster: '/images/team-photo.jpg',
-    caption: 'Hands-on in the field alongside the Niah team at every outreach event.',
-  },
+  { tag: 'HR Consultant',          video: '/videos/hr-consultant.mp4',          poster: '/images/community-photo.jpg' },
+  { tag: 'Mental Health Advocate', video: '/videos/mental-health-advocate.mp4', poster: '/images/about-hero.jpg' },
+  { tag: 'Youth Leader',           video: '/videos/youth-leader.mp4',           poster: '/images/story-photo.jpg' },
+  { tag: 'Volunteer',              video: '/videos/volunteer.mp4',              poster: '/images/team-photo.jpg' },
 ]
 
 function CredentialTag({ item, isSource, isGlowing, buttonRef, onOpen }) {
@@ -49,21 +29,17 @@ function CredentialTag({ item, isSource, isGlowing, buttonRef, onOpen }) {
           : 'bg-primary-fixed/50 text-on-primary-fixed hover:bg-primary-fixed/80 hover:shadow-lg hover:shadow-primary/40'
       }`}
     >
-      {/* Pulsing glow ring — nudges attention when section enters view, like a "subscribe" cue */}
       {isGlowing && !isSource && (
-        <span className="absolute inset-0 rounded-full animate-ping-slow bg-primary/50 -z-10" />
+        <span className="absolute -inset-2 rounded-full animate-ping-slow bg-primary/60 -z-10 pointer-events-none" />
       )}
       {item.tag}
     </button>
   )
 }
 
-// Morphs from the clicked tag's exact position/size into a centered detail card.
-// Sits below the navbar (z-40 vs navbar's z-50) with top padding, so it never
-// visually touches or overlaps the header.
 function MorphCard({ item, startRect, onClose }) {
-  const [phase, setPhase] = useState('start') // 'start' -> 'end'
-  const NAV_GAP = 96 // px reserved below the fixed navbar
+  const [phase, setPhase] = useState('start')
+  const NAV_GAP = 96
 
   const finalStyle = {
     top: `calc(${NAV_GAP}px + (100vh - ${NAV_GAP}px) / 2)`,
@@ -109,33 +85,28 @@ function MorphCard({ item, startRect, onClose }) {
         style={{ ...style, transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
       >
         <div
-          className={`h-full flex flex-col transition-opacity duration-200 ${
+          className={`h-full relative transition-opacity duration-200 ${
             phase === 'end' ? 'opacity-100 delay-[250ms]' : 'opacity-0'
           }`}
         >
-          <div className="relative shrink-0">
-            <video
-              src={item.video}
-              poster={item.poster}
-              className="w-full h-64 object-cover bg-on-surface/10"
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
-            <button
-              onClick={handleClose}
-              className="absolute top-4 right-4 bg-surface/90 backdrop-blur-sm rounded-full p-2
-                         text-on-surface hover:text-primary transition-colors shadow-md"
-              aria-label="Close"
-            >
-              <span className="material-symbols-outlined text-xl block">close</span>
-            </button>
-          </div>
-          <div className="p-8 overflow-y-auto">
-            <span className="section-eyebrow mb-3 inline-block">{item.tag}</span>
-            <p className="text-on-surface-variant text-base leading-relaxed">{item.caption}</p>
-          </div>
+          <video
+            key={item.video}
+            src={item.video}
+            poster={item.poster}
+            className="w-full h-full object-cover bg-on-surface/10"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 bg-surface/90 backdrop-blur-sm rounded-full p-2
+                       text-on-surface hover:text-primary transition-colors shadow-md"
+            aria-label="Close"
+          >
+            <span className="material-symbols-outlined text-xl block">close</span>
+          </button>
         </div>
       </div>
     </div>
@@ -146,24 +117,23 @@ export default function About() {
   const [active, setActive]       = useState(null)
   const [startRect, setStartRect] = useState(null)
   const [glowing, setGlowing]     = useState(false)
-  const btnRefs   = useRef({})
+  const btnRefs    = useRef({})
   const sectionRef = useRef(null)
 
-  // Scroll-triggered attention cue — pulses the tags a few times once the
-  // section enters view, works identically on mobile scroll and desktop.
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setGlowing(true)
-          const timer = setTimeout(() => setGlowing(false), 2400) // ~3 pulses then rest
-          observer.disconnect()
-          return () => clearTimeout(timer)
-        }
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setGlowing(true)
+            setTimeout(() => setGlowing(false), 2400)
+            observer.disconnect()
+          }
+        })
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     )
     observer.observe(el)
     return () => observer.disconnect()
@@ -184,7 +154,6 @@ export default function About() {
         imgSrc="/images/about-hero.jpg"
       />
 
-      {/* Story */}
       <section className="py-20">
         <div className="max-w-container-max mx-auto px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -221,14 +190,12 @@ export default function About() {
         </div>
       </section>
 
-      {/* The Founder */}
       <section className="py-20 bg-surface-container">
         <div className="max-w-container-max mx-auto px-10">
           <div className="max-w-3xl mx-auto text-center">
             <span className="section-eyebrow">THE FOUNDER</span>
             <h2 className="section-title mb-12">Meet Chenaniah Bamishile.</h2>
 
-            {/* Portrait */}
             <div className="relative mx-auto mb-10 w-64 h-80 md:w-80 md:h-96">
               <div className="organic-shape bg-primary-fixed/30 absolute inset-0" />
               <div className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl">
@@ -240,7 +207,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Bio */}
             <div className="text-left card-container-low p-8 md:p-10 rounded-3xl border-l-4 border-primary space-y-4">
               <p className="text-on-surface-variant text-lg leading-relaxed">
                 Niah Foundation was founded by <span className="font-semibold text-on-surface">Chenaniah Bamishile</span>,
@@ -259,7 +225,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Credential tags — separated from bio, its own moment */}
       <section ref={sectionRef} className="py-16 bg-surface-container">
         <div className="max-w-container-max mx-auto px-10 text-center">
           <span className="section-eyebrow">HER BACKGROUND</span>
@@ -289,7 +254,6 @@ export default function About() {
         />
       )}
 
-      {/* Values */}
       <section className="py-20">
         <div className="max-w-container-max mx-auto px-10">
           <div className="text-center mb-14">
@@ -312,12 +276,12 @@ export default function About() {
 
       <style>{`
         @keyframes pingSlow {
-          0%   { transform: scale(1);    opacity: 0.6; }
-          70%  { transform: scale(1.35); opacity: 0;   }
-          100% { transform: scale(1.35); opacity: 0;   }
+          0%   { transform: scale(1);    opacity: 0.7; }
+          70%  { transform: scale(1.4);  opacity: 0;   }
+          100% { transform: scale(1.4);  opacity: 0;   }
         }
         .animate-ping-slow {
-          animation: pingSlow 1.2s cubic-bezier(0,0,0.2,1) 2;
+          animation: pingSlow 1.1s cubic-bezier(0,0,0.2,1) 3;
         }
       `}</style>
     </>
