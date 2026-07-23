@@ -22,6 +22,25 @@ const STATS = [
   },
 ]
 
+// TODO: replace with real testimonials — placeholders for now
+const TESTIMONIALS = [
+  {
+    quote: 'Niah gave my family hope when we had nowhere else to turn.',
+    name: 'Placeholder Name',
+    location: 'Lagos',
+  },
+  {
+    quote: 'The outreach team treated us with so much dignity and care.',
+    name: 'Placeholder Name',
+    location: 'Abuja',
+  },
+  {
+    quote: "I didn't know support like this existed until Niah found us.",
+    name: 'Placeholder Name',
+    location: 'Ibadan',
+  },
+]
+
 export default function Home() {
   return (
     <>
@@ -215,6 +234,49 @@ export default function Home() {
               </Link>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonies */}
+      <section className="py-20">
+        <div className="max-w-container-max mx-auto px-10">
+          <div className="text-center mb-14">
+            <span className="section-eyebrow">IN THEIR WORDS</span>
+            <h2 className="section-title">Stories from the people we've served.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {TESTIMONIALS.map(({ quote, name, location }, i) => (
+              <div key={i} className="card p-8 flex flex-col justify-between">
+                <p className="text-on-surface text-base leading-relaxed italic mb-6">"{quote}"</p>
+                <div>
+                  <p className="font-semibold text-on-surface text-sm">{name}</p>
+                  <p className="text-on-surface-variant text-xs flex items-center gap-1 mt-1">
+                    <span className="material-symbols-outlined text-sm">location_on</span>{location}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Share Your Story / Get Help */}
+      <section className="py-20 bg-surface-container">
+        <div className="max-w-container-max mx-auto px-10">
+          <div className="card-container-low p-10 md:p-14 rounded-[2rem] text-center max-w-3xl mx-auto">
+            <span className="material-symbols-outlined text-primary text-5xl mb-5 block">favorite</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-on-surface mb-5">
+              Share your story anonymously. Get help.
+            </h2>
+            <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
+              We offer free, confidential mental health support and referrals to anyone who needs it —
+              no names required. Whether you want to share what you've been through or simply reach out
+              for help, our team is here to listen without judgment.
+            </p>
+            <Link to="/impact#dear-nf" className="btn-primary inline-flex items-center gap-2">
+              SHARE YOUR STORY <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </Link>
           </div>
         </div>
       </section>

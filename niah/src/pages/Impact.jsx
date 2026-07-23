@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import PageHero from '../components/PageHero'
 import ShareStorySection from '../components/ShareStorySection'
 
@@ -15,19 +16,51 @@ const STORIES = [
     quote: "Before Niah, I didn't know what was happening to my son. The clinic gave us a diagnosis, a plan, and most importantly — hope.",
     name: 'Patience O.',
     location: 'Enugu',
-    icon: 'format_quote',
   },
   {
     quote: "I was trained as a community facilitator through the Niah program. I've since helped 60 young people in my area access support.",
     name: 'Suleiman K.',
     location: 'Kano',
-    icon: 'format_quote',
   },
   {
     quote: 'The therapy sessions changed everything for my daughter. She is in school now, participating, thriving.',
     name: 'Mrs. Adaora B.',
     location: 'Anambra',
-    icon: 'format_quote',
+  },
+  {
+    quote: 'Niah gave me the language to talk about what I was feeling. I finally stopped blaming myself.',
+    name: 'Blessing U.',
+    location: 'Lagos',
+  },
+  {
+    quote: 'Our school never had a counselor until the Niah program came. Now students actually ask for help instead of hiding.',
+    name: 'Mr. Femi A.',
+    location: 'Ogun',
+  },
+  {
+    quote: 'The outreach team met us where we were — literally, at the market. That kind of care is rare.',
+    name: 'Halima Y.',
+    location: 'Kaduna',
+  },
+  {
+    quote: "I didn't believe therapy was 'for people like me' until I tried it. Now I recommend it to everyone I know.",
+    name: 'Chidi N.',
+    location: 'Rivers',
+  },
+  {
+    quote: 'My daughter went from non-verbal to forming full sentences in six months of early intervention.',
+    name: 'Grace I.',
+    location: 'Delta',
+  },
+  {
+    quote: 'Volunteering with Niah taught me as much as it helped the people we served.',
+    name: 'Tobi S.',
+    location: 'Oyo',
+  },
+  {
+    quote: 'We buried the stigma along with our silence. Niah helped our whole community start talking.',
+    name: 'Amara C.',
+    location: 'Abia',
   },
 ]
 
@@ -51,6 +84,59 @@ const PROGRAMS = [
     icon: 'campaign',
   },
 ]
+
+function TestimonialCarousel() {
+  // Duplicate the list so the marquee can loop seamlessly
+  const track = [...STORIES, ...STORIES]
+  const trackRef = useRef(null)
+  const hoverTimerRef = useRef(null)
+
+  function handleMouseEnter() {
+    hoverTimerRef.current = setTimeout(() => {
+      if (trackRef.current) trackRef.current.style.animationPlayState = 'paused'
+    }, 600)
+  }
+
+  function handleMouseLeave() {
+    clearTimeout(hoverTimerRef.current)
+    if (trackRef.current) trackRef.current.style.animationPlayState = 'running'
+  }
+
+  return (
+    <div className="relative overflow-hidden">
+      <div
+        ref={trackRef}
+        className="flex gap-8 w-max"
+        style={{ animation: 'marqueeScroll 45s linear infinite' }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {track.map(({ quote, name, location }, i) => (
+          <div key={i} className="card p-8 flex flex-col justify-between w-[340px] shrink-0">
+            <p className="text-on-surface text-base leading-relaxed italic mb-6">"{quote}"</p>
+            <div>
+              <p className="font-semibold text-on-surface text-sm">{name}</p>
+              <p className="text-on-surface-variant text-xs flex items-center gap-1 mt-1">
+                <span className="material-symbols-outlined text-sm">location_on</span>{location}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* fade edges so cards don't clip abruptly */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-surface-container to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-surface-container to-transparent" />
+
+      <style>{`
+        @keyframes marqueeScroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+      `}</style>
+    </div>
+  )
+}
 
 export default function Impact() {
   return (
@@ -103,30 +189,20 @@ export default function Impact() {
         </div>
       </section>
 
-      {/* Stories */}
+      {/* Stories — carousel */}
       <section className="py-20 bg-surface-container">
         <div className="max-w-container-max mx-auto px-10">
           <div className="mb-12 text-center">
             <span className="section-eyebrow">TESTIMONIALS</span>
             <h2 className="section-title">Voices from the field.</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {STORIES.map(({ quote, name, location }) => (
-              <div key={name} className="card p-8 flex flex-col justify-between">
-                <p className="text-on-surface text-base leading-relaxed italic mb-6">"{quote}"</p>
-                <div>
-                  <p className="font-semibold text-on-surface text-sm">{name}</p>
-                  <p className="text-on-surface-variant text-xs flex items-center gap-1 mt-1">
-                    <span className="material-symbols-outlined text-sm">location_on</span>{location}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <TestimonialCarousel />
         </div>
       </section>
 
-      <ShareStorySection />
+      <div id="dear-nf">
+        <ShareStorySection />
+      </div>
     </>
   )
 }
