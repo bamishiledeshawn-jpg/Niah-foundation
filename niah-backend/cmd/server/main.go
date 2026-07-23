@@ -37,6 +37,7 @@ func main() {
 		r.Post("/register",        handlers.RegisterVolunteer(database))
 		r.Get("/events",           handlers.ListEvents(database))
 		r.Post("/payments/verify", handlers.VerifyPayment(database, cfg.PaystackSecretKey))
+		r.Post("/stories",         handlers.SubmitStory(database))
 
 		// ── Admin (token required) ────────────────────────────────────
 		r.Group(func(r chi.Router) {
@@ -46,6 +47,7 @@ func main() {
 			r.Post("/admin/events",       handlers.CreateEvent(database))
 			r.Delete("/admin/events/{id}", handlers.DeleteEvent(database))
 			r.Get("/admin/payments",      handlers.ListPayments(database))
+			r.Get("/admin/stories",       handlers.ListStories(database))
 		})
 	})
 

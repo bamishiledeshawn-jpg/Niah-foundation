@@ -69,6 +69,18 @@ func migrate(db *sql.DB) error {
 	CREATE INDEX IF NOT EXISTS idx_payments_reference  ON payments(reference);
 	CREATE INDEX IF NOT EXISTS idx_payments_email      ON payments(email);
 	CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at);
+
+	CREATE TABLE IF NOT EXISTS stories (
+		id          INTEGER  PRIMARY KEY AUTOINCREMENT,
+		story       TEXT     NOT NULL,
+		duration    TEXT     NOT NULL DEFAULT '',
+		support     TEXT     NOT NULL DEFAULT '',
+		pseudonym   TEXT     NOT NULL DEFAULT '',
+		final_note  TEXT     NOT NULL DEFAULT '',
+		created_at  DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_stories_created_at ON stories(created_at);
 	`
 
 	alterStatements := []string{

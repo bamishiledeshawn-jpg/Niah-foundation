@@ -54,6 +54,14 @@ function ErrorBanner({ message, onRetry }) {
   )
 }
 
+function formatDate(iso) {
+  if (!iso) return '—'
+  return new Date(iso).toLocaleString('en-GB', {
+    day: '2-digit', month: 'short', year: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+}
+
 // ── Token login screen ────────────────────────────────────────────────────────
 
 function TokenGate({ onAuthenticated }) {
@@ -170,14 +178,6 @@ const REG_COLUMNS = [
   { key: 'message',    label: 'Message'   },
   { key: 'created_at', label: 'Submitted' },
 ]
-
-function formatDate(iso) {
-  if (!iso) return '—'
-  return new Date(iso).toLocaleString('en-GB', {
-    day: '2-digit', month: 'short', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  })
-}
 
 function RegistrationsTab({ token }) {
   const [volunteers, setVolunteers] = useState([])
@@ -300,6 +300,150 @@ function RegistrationsTab({ token }) {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Stories tab (anonymous "Dear NF" submissions) ─────────────────────────────
+
+function StoriesTab({ token }) {
+  const [stories,     setStories]     = useState([])
+  const [count,        setCount]        = useState(0)
+  const [loading,      setLoading]      = useState(true)
+  const [error,        setError]        = useState('')
+  const [search,       setSearch]       = useState('')
+  const [expandedId,   setExpandedId]   = useState(null)
+
+  const fetchData = useCallback(async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch(`${API_URL}/api/admin/stories`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      })
+      if (!res.ok) throw new Error(`${res.status}`)
+      const data = await res.json()
+      setStories(data.stories ?? [])
+      setCount(data.count ?? 0)
+    } catch {
+      setError('Failed to load stories. Check the backend is still running.')
+    } finally {
+      setLoading(false)
+    }
+  }, [token])
+
+  useEffect(() => {
+    fetchData()
+    const id = setInterval(fetchData, 30_000)
+    return () => clearInterval(id)
+  }, [fetchData])
+
+  const filtered = stories.filter(s => {
+    const q = search.toLowerCase()
+    return (
+      s.story?.toLowerCase().includes(q) ||
+      s.pseudonym?.toLowerCase().includes(q) ||
+      s.duration?.toLowerCase().includes(q)
+    )
+  })
+
+  const durationCounts = stories.reduce((acc, s) => {
+    const d = s.duration || 'Unspecified'
+    acc[d] = (acc[d] ?? 0) + 1
+    return acc
+  }, {})
+  const topDuration = Object.entries(durationCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—'
+
+  return (
+    <div className="space-y-6">
+      {/* Stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <StatCard icon="mail" value={count} label="Total submissions" color="text-primary" />
+        <StatCard icon="schedule" value={topDuration} label="Most common duration" color="text-secondary" />
+        <StatCard icon="badge" value={stories.filter(s => s.pseudonym).length} label="Used a pseudonym" color="text-tertiary" />
+      </div>
+
+      {error && <ErrorBanner message={error} onRetry={fetchData} />}
+
+      <div className="bg-surface rounded-2xl border border-outline-variant/30 overflow-hidden">
+        <div className="px-6 py-4 border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+          <p className="text-sm text-on-surface-variant">
+            {loading ? 'Loading…' : `${filtered.length} of ${count} submission${count !== 1 ? 's' : ''}`}
+          </p>
+          <div className="relative max-w-xs w-full">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search story, pseudonym, duration…"
+              className="w-full bg-surface-container-low border border-outline-variant rounded-xl pl-9 pr-4 py-2 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-primary/40"
+            />
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="flex items-center justify-center py-20 gap-3 text-on-surface-variant">
+            <span className="material-symbols-outlined animate-spin text-2xl">progress_activity</span>
+            <span className="text-sm">Fetching submissions…</span>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant gap-3">
+            <span className="material-symbols-outlined text-5xl opacity-30">inbox</span>
+            <p className="text-sm">{search ? 'No results match your search.' : 'No submissions yet.'}</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-outline-variant/20">
+            {filtered.map(s => {
+              const isOpen = expandedId === s.id
+              return (
+                <div key={s.id} className="px-6 py-5 hover:bg-surface-container-low/50 transition-colors">
+                  <button
+                    onClick={() => setExpandedId(isOpen ? null : s.id)}
+                    className="w-full flex items-start justify-between gap-4 text-left"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="bg-primary-fixed/60 text-on-primary-fixed text-xs font-semibold px-3 py-0.5 rounded-full">
+                          {s.duration || 'Unspecified'}
+                        </span>
+                        {s.pseudonym && (
+                          <span className="text-on-surface-variant text-xs italic">"{s.pseudonym}"</span>
+                        )}
+                        <span className="text-on-surface-variant text-xs">{formatDate(s.created_at)}</span>
+                      </div>
+                      <p className={`text-sm text-on-surface ${isOpen ? '' : 'truncate'}`}>
+                        {s.story}
+                      </p>
+                    </div>
+                    <span className="material-symbols-outlined text-on-surface-variant shrink-0 mt-1">
+                      {isOpen ? 'expand_less' : 'expand_more'}
+                    </span>
+                  </button>
+
+                  {isOpen && (
+                    <div className="mt-4 pl-1 space-y-3 text-sm">
+                      {s.support && (
+                        <div>
+                          <p className="font-semibold text-on-surface-variant text-xs uppercase tracking-wide mb-1">What support looks like</p>
+                          <p className="text-on-surface">{s.support}</p>
+                        </div>
+                      )}
+                      {s.final_note && (
+                        <div>
+                          <p className="font-semibold text-on-surface-variant text-xs uppercase tracking-wide mb-1">Final note</p>
+                          <p className="text-on-surface">{s.final_note}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
@@ -599,7 +743,7 @@ function EventsTab({ token }) {
 // ── Dashboard shell ───────────────────────────────────────────────────────────
 
 function Dashboard({ token, onSignOut }) {
-  const [tab, setTab] = useState('registrations') // 'registrations' | 'events'
+  const [tab, setTab] = useState('registrations') // 'registrations' | 'events' | 'stories'
 
   return (
     <div className="min-h-screen bg-background">
@@ -631,8 +775,9 @@ function Dashboard({ token, onSignOut }) {
         {/* Tab toggle */}
         <div className="flex gap-1 bg-surface-container p-1 rounded-2xl w-fit border border-outline-variant/20">
           {[
-            { key: 'registrations', icon: 'group',      label: 'Registrations' },
-            { key: 'events',        icon: 'event',       label: 'Events'        },
+            { key: 'registrations', icon: 'group', label: 'Registrations' },
+            { key: 'events',        icon: 'event', label: 'Events'        },
+            { key: 'stories',       icon: 'mail',  label: 'Stories'       },
           ].map(t => (
             <button
               key={t.key}
@@ -652,6 +797,7 @@ function Dashboard({ token, onSignOut }) {
         {/* Tab content */}
         {tab === 'registrations' && <RegistrationsTab token={token} />}
         {tab === 'events'        && <EventsTab        token={token} />}
+        {tab === 'stories'       && <StoriesTab       token={token} />}
       </main>
     </div>
   )

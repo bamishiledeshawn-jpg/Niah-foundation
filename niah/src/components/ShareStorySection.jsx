@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
+
 const DURATION_OPTIONS = [
   'A few days/weeks',
   'A few months',
@@ -7,9 +9,6 @@ const DURATION_OPTIONS = [
   'Not sure',
 ]
 
-// TODO(backend): POST this payload to /api/stories once the endpoint exists,
-// then surface submissions in the Admin dashboard under a new "Stories" tab
-// (same Bearer-token auth pattern as /api/admin/registrations).
 export default function ShareStorySection() {
   const [story, setStory]         = useState('')
   const [duration, setDuration]   = useState('')
@@ -18,22 +17,30 @@ export default function ShareStorySection() {
   const [finalNote, setFinalNote] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError]         = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     if (!story.trim() || !duration) {
       setError("Please share a bit about what you're going through and how long it's been.")
       return
     }
     setError('')
+    setSubmitting(true)
 
-    // TODO(backend): replace with real submission, e.g.
-    // fetch(`${API_URL}/api/stories`, { method: 'POST', body: JSON.stringify({ story, duration, support, pseudonym, finalNote }) })
-    console.log('Story submission (not yet wired to backend):', {
-      story, duration, support, pseudonym, finalNote,
-    })
-
-    setSubmitted(true)
+    try {
+      const res = await fetch(`${API_URL}/api/stories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ story, duration, support, pseudonym, finalNote }),
+      })
+      if (!res.ok) throw new Error()
+      setSubmitted(true)
+    } catch {
+      setError('Something went wrong sending your story. Please try again in a moment.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -155,8 +162,8 @@ export default function ShareStorySection() {
               <p className="text-error text-sm">{error}</p>
             )}
 
-            <button type="submit" className="btn-primary text-xs py-3 px-8">
-              SHARE ANONYMOUSLY
+            <button type="submit" disabled={submitting} className="btn-primary text-xs py-3 px-8 disabled:opacity-60 disabled:cursor-not-allowed">
+              {submitting ? 'SENDING…' : 'SHARE ANONYMOUSLY'}
             </button>
           </form>
         </div>
