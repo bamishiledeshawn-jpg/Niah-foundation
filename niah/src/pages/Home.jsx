@@ -177,7 +177,7 @@ export default function Home() {
                 <p className="text-on-surface text-sm leading-relaxed">
                   <span className="font-semibold text-tertiary">Did you know?</span>{' '}
                   The Niah Foundation has benefited over 1,000 people, transforming lives across Nigeria,
-                  supporting over 300 women — including widows and survivors of domestic violence — through
+                  supporting over 300 women, including widows and survivors of domestic violence through
                   mental health resources, food donation drives, and empowerment programs.
                 </p>
               </div>
@@ -270,7 +270,7 @@ export default function Home() {
               Share your story anonymously. Get help.
             </h2>
             <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
-              We offer free, confidential mental health support and referrals to anyone who needs it —
+              We offer free, confidential mental health support and referrals to anyone who needs it,
               no names required. Whether you want to share what you've been through or simply reach out
               for help, our team is here to listen without judgment.
             </p>

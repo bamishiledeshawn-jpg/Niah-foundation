@@ -164,7 +164,7 @@ export default function About() {
                 <p>
                   Niah Foundation was established after our founder witnessed firsthand the lack of accessible,
                   stigma-free support for a family member navigating severe depression in Lagos. What should
-                  have been a manageable situation became a crisis — not for lack of love, but for lack of
+                  have been a manageable situation became a crisis, not for lack of love, but for lack of
                   resources, trained professionals, and community understanding.
                 </p>
                 <p>
@@ -173,7 +173,7 @@ export default function About() {
                   that exists is concentrated in Lagos and Abuja, leaving millions underserved.
                 </p>
                 <p>
-                  Niah was founded to bridge that gap — not through charity alone, but through sustainable,
+                  Niah was founded to bridge that gap, not through charity alone, but through sustainable,
                   community-rooted action that builds capacity where it's needed most.
                 </p>
               </div>

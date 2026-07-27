@@ -52,7 +52,7 @@ export default function ShareStorySection() {
             <h2 className="font-display text-2xl font-bold text-on-surface mb-3">Thank you for trusting us.</h2>
             <p className="text-on-surface-variant text-sm leading-relaxed">
               Your story has been received. Every week we choose one submission for a licensed
-              therapist, trained mental health first aider, or peer supporter to respond to —
+              therapist, trained mental health first aider, or peer supporter to respond to 
               anonymously, on our page. No pressure, no shame. Just honesty and healing.
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function ShareStorySection() {
             This is a safe space to share something you've been going through mentally or
             emotionally. You don't have to give your name, and you won't be judged. Every week,
             we choose one submission and have a licensed therapist, trained mental health first
-            aider, or peer supporter respond with care — posted anonymously as part of our
+            aider, or peer supporter respond with care, posted anonymously as part of our
             ongoing mental health series.
           </p>
 

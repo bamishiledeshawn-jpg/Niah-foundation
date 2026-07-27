@@ -255,7 +255,7 @@ export default function Contact() {
       <PageHero
         eyebrow="CONTACT & DONATE"
         title="Let's talk. We're listening."
-        subtitle="Whether you want to donate, partner, or simply reach out — we'd love to hear from you."
+        subtitle="Whether you want to donate, partner, or simply reach out, we'd love to hear from you."
         imgSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuBKpUBpJIE-TNn3ddrG8cEqN_QphDMDYm04UtF-FSD2T9Xt7hBNHktUCJksrB3CnFk4PqQpBF0nLzpn1YTvqyChfbON15_KcgM0y2S8PUGRmQF8q2-0cCRAvSOyEfkZuQqGpDC9ia3pQ6QmFVmEzOl5BpEih82ycH0cM5aFShRSwUEIDmYiA0V0_sz6d4YJAmJleBhKdi8EnYK3tLIwIHRWvTL2EEgJBBt_JE9p9rRozhvQoXJkMz_C4zW-vgRn-SK3aF3BkEQ21Us"
       />
 
