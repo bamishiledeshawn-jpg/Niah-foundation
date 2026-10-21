@@ -416,7 +416,7 @@ export default function Events() {
       </section>
 
       {/* ── Past events — interactive cards ── */}
-      <section className="py-20 bg-surface-container">
+      <section id="past-events" className="py-20 bg-surface-container scroll-mt-24">
         <div className="max-w-container-max mx-auto px-10">
           <div className="mb-12">
             <span className="section-eyebrow">WHAT WE'VE DONE</span>

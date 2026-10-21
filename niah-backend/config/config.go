@@ -6,11 +6,16 @@ import (
 )
 
 type Config struct {
-	Port             string
-	DBPath           string
-	AllowedOrigin    string
-	AdminToken       string
+	Port              string
+	DBPath            string
+	AllowedOrigin     string
+	AdminToken        string
 	PaystackSecretKey string
+
+	// TrustProxy tells the rate limiter to read the client IP from
+	// X-Forwarded-For. Only enable it when a proxy you control sets that
+	// header — otherwise callers can forge it and sidestep the limit.
+	TrustProxy bool
 }
 
 func Load() Config {
@@ -30,6 +35,7 @@ func Load() Config {
 		AllowedOrigin:     getEnv("ALLOWED_ORIGIN", "http://localhost:5173"),
 		AdminToken:        token,
 		PaystackSecretKey: paystackKey,
+		TrustProxy:        getEnv("TRUST_PROXY", "") == "true",
 	}
 }
 

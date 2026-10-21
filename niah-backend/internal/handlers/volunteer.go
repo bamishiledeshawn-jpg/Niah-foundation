@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 // volunteerRequest mirrors the JSON body sent by the React frontend's
@@ -104,6 +105,13 @@ func validate(req volunteerRequest) error {
 		return errors.New("phone number is too short")
 	}
 	return nil
+}
+
+// overLimit reports whether s is longer than max characters. Counting runes
+// rather than bytes means an accented or non-Latin character costs the same as
+// an ASCII one, so the cap is the same length to every writer.
+func overLimit(s string, max int) bool {
+	return utf8.RuneCountInString(s) > max
 }
 
 // writeJSON serialises v as JSON and writes it with the given status code.

@@ -66,6 +66,20 @@
   }
 }
 
+/* ── Reduced motion ──
+   Covers the page-level keyframes (marqueeScroll, slideInRight, pingSlow)
+   without having to repeat a media query inside each page's <style> block. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Leaflet z-index fix — keeps map behind the fixed navbar ── */
 .leaflet-container {
   z-index: 0;

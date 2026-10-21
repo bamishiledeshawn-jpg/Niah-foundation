@@ -31,13 +31,31 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.CORS(cfg.AllowedOrigin))
 
+	// Every unauthenticated POST gets a body-size cap and a per-IP rate limit.
+	// The limits are deliberately loose enough that a real person filling in a
+	// form never meets them, and tight enough that a script cannot flood the
+	// table. Payment verification is the exception: a donor whose first verify
+	// fails will retry, so it allows a larger burst that refills quickly.
+	publicPost := func(burst int, refill time.Duration, maxBody int64) []func(http.Handler) http.Handler {
+		return []func(http.Handler) http.Handler{
+			middleware.MaxBytes(maxBody),
+			middleware.RateLimit(burst, refill, cfg.TrustProxy),
+		}
+	}
+
 	r.Route("/api", func(r chi.Router) {
 		// ── Public ────────────────────────────────────────────────────
-		r.Get("/health",           handlers.HealthCheck)
-		r.Post("/register",        handlers.RegisterVolunteer(database))
-		r.Get("/events",           handlers.ListEvents(database))
-		r.Post("/payments/verify", handlers.VerifyPayment(database, cfg.PaystackSecretKey))
-		r.Post("/stories",         handlers.SubmitStory(database))
+		r.Get("/health", handlers.HealthCheck)
+		r.Get("/events", handlers.ListEvents(database))
+
+		r.With(publicPost(5, 2*time.Minute, 16<<10)...).
+			Post("/register", handlers.RegisterVolunteer(database))
+		r.With(publicPost(3, 5*time.Minute, 64<<10)...).
+			Post("/stories", handlers.SubmitStory(database))
+		r.With(publicPost(5, 2*time.Minute, 32<<10)...).
+			Post("/contact", handlers.SubmitMessage(database))
+		r.With(publicPost(20, 10*time.Second, 4<<10)...).
+			Post("/payments/verify", handlers.VerifyPayment(database, cfg.PaystackSecretKey))
 
 		// ── Admin (token required) ────────────────────────────────────
 		r.Group(func(r chi.Router) {
@@ -48,6 +66,7 @@ func main() {
 			r.Delete("/admin/events/{id}", handlers.DeleteEvent(database))
 			r.Get("/admin/payments",      handlers.ListPayments(database))
 			r.Get("/admin/stories",       handlers.ListStories(database))
+			r.Get("/admin/messages",      handlers.ListMessages(database))
 		})
 	})
 

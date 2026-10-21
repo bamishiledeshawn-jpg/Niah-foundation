@@ -192,13 +192,48 @@ function DonationBlock() {
 // ── Contact form ──────────────────────────────────────────────────────────────
 
 function ContactForm() {
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted,  setSubmitted]  = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error,      setError]      = useState('')
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const set = key => e => setForm(prev => ({ ...prev, [key]: e.target.value }))
 
   const inputClass =
     'w-full bg-surface border border-outline-variant rounded-xl px-4 py-3 text-sm ' +
     'focus:outline-none focus:ring-2 focus:ring-primary/40'
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setError('Please fill in your name, email, and a message.')
+      return
+    }
+
+    setError('')
+    setSubmitting(true)
+
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(form),
+      })
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        // The backend returns { "error": "..." } on every failure path.
+        setError(data?.error ?? 'Something went wrong. Please try again.')
+        return
+      }
+
+      setSubmitted(true)
+    } catch {
+      setError('Could not reach the server. Check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div id="contact-form" className="scroll-mt-28">
@@ -212,7 +247,7 @@ function ContactForm() {
           <p className="text-on-surface-variant">We'll respond within 2 business days.</p>
         </div>
       ) : (
-        <div className="card p-10 space-y-6">
+        <form onSubmit={handleSubmit} className="card p-10 space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide block mb-2">Name</label>
@@ -238,10 +273,19 @@ function ContactForm() {
             <label className="text-xs font-semibold text-on-surface-variant uppercase tracking-wide block mb-2">Message</label>
             <textarea rows={5} value={form.message} onChange={set('message')} className={inputClass} placeholder="How can we help?" />
           </div>
-          <button onClick={() => setSubmitted(true)} className="btn-primary w-full flex justify-center">
-            SEND MESSAGE
+
+          {error && (
+            <div className="bg-error-container text-on-error-container rounded-xl px-5 py-4 text-sm flex items-start gap-3">
+              <span className="material-symbols-outlined text-base shrink-0">error</span>
+              <span>{error}</span>
+            </div>
+          )}
+
+          <button type="submit" disabled={submitting} className="btn-primary w-full flex justify-center items-center gap-2 disabled:opacity-60">
+            {submitting && <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>}
+            {submitting ? 'SENDING…' : 'SEND MESSAGE'}
           </button>
-        </div>
+        </form>
       )}
     </div>
   )

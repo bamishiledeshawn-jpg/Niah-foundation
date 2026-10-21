@@ -81,6 +81,17 @@ func migrate(db *sql.DB) error {
 	);
 
 	CREATE INDEX IF NOT EXISTS idx_stories_created_at ON stories(created_at);
+
+	CREATE TABLE IF NOT EXISTS messages (
+		id         INTEGER  PRIMARY KEY AUTOINCREMENT,
+		name       TEXT     NOT NULL,
+		email      TEXT     NOT NULL,
+		subject    TEXT     NOT NULL DEFAULT '',
+		message    TEXT     NOT NULL,
+		created_at DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
 	`
 
 	alterStatements := []string{
