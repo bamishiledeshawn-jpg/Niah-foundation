@@ -1,8 +1,21 @@
 /**
  * PageHero — reusable top banner for interior pages
- * Props: eyebrow, title, subtitle, imgSrc, imgAlt
+ * Props: eyebrow, title, subtitle, imgSrc, imgAlt, fadeTo
+ *
+ * fadeTo must name the background of the section that follows the hero. The
+ * bottom fade ends on that colour, so passing the wrong one (or leaving the
+ * default on a page that opens with a tinted section) leaves a visible seam
+ * where the image stops.
  */
-export default function PageHero({ eyebrow, title, subtitle, imgSrc, imgAlt }) {
+
+// Tailwind only generates classes it can see written out, so the colour is
+// looked up here rather than interpolated into the class string.
+const FADE_TO = {
+  background: 'to-background',
+  'surface-container': 'to-surface-container',
+}
+
+export default function PageHero({ eyebrow, title, subtitle, imgSrc, imgAlt, fadeTo = 'background' }) {
   return (
     <section className="relative h-72 md:h-96 flex items-center overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -14,7 +27,7 @@ export default function PageHero({ eyebrow, title, subtitle, imgSrc, imgAlt }) {
         {/* Left-to-right readability gradient */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/[86.5%] via-background/[61.5%] to-transparent" />
         {/* Bottom fade — blends the image smoothly into the page below instead of a hard cutoff */}
-        <div className="absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent to-background" />
+        <div className={`absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent ${FADE_TO[fadeTo] ?? FADE_TO.background}`} />
       </div>
       <div className="relative z-10 max-w-container-max mx-auto px-10 w-full">
         <span className="section-eyebrow">{eyebrow}</span>

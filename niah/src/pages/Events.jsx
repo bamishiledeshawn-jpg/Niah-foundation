@@ -49,7 +49,14 @@ function mapEvents(events) {
 const NIGERIA_CENTER = [9.082, 8.6753]
 
 // ── Past events data ──────────────────────────────────────────────────────────
-// Replace image paths with real photos — put files in niah/public/images/past-events/
+// Put real photos in niah/public/images/past-events/ and point the paths here.
+//
+// Slots marked "placeholder" reuse a general foundation photo because the real
+// event photo was never supplied. They keep the gallery from showing broken
+// images, but they do NOT document the event they appear under — don't treat
+// this page as a photographic record until they are replaced. The filenames the
+// real photos should take are: pad-outreach-2, blood-1/2, food-1/2, art-1/2,
+// revamp-1/2 (.jpg).
 const PAST_EVENTS = [
   {
     id: 1,
@@ -60,7 +67,7 @@ const PAST_EVENTS = [
     fullDescription: "At Prismoni Comprehensive High School, our \'A Pad for Her\' initiative successfully provided menstrual hygiene products to 100 girls, ensuring their continued access to education without disruptions.",
     images: [
       "/images/past-events/pad-outreach-1.jpg",
-      "/images/past-events/pad-outreach-2.jpg",
+      "/images/community-photo.jpg", // placeholder
     ],
   },
   {
@@ -83,8 +90,8 @@ const PAST_EVENTS = [
     reach: "Pints donated",
     fullDescription: "We contributed to life-saving efforts at Massey Children's Hospital by donating pints of blood during our impactful blood drive on the 2nd of December.",
     images: [
-      "/images/past-events/blood-1.jpg",
-      "/images/past-events/blood-2.jpg",
+      "/images/team-photo.jpg",    // placeholder
+      "/images/hero-outreach.jpg", // placeholder
     ],
   },
   {
@@ -95,8 +102,8 @@ const PAST_EVENTS = [
     reach: "100+ elderly people",
     fullDescription: "We provided foodstuff to over 100 elderly people in the Shangisha community, in an engaging and gamified format on the 24th of May.",
     images: [
-      "/images/past-events/food-1.jpg",
-      "/images/past-events/food-2.jpg",
+      "/images/community-photo.jpg", // placeholder
+      "/images/events-hero.jpg",     // placeholder
     ],
   },
   {
@@ -107,8 +114,8 @@ const PAST_EVENTS = [
     reach: "Art therapy session",
     fullDescription: "On the 6th of December we visited the lovely kids at Hamros Primary School in the Ketu community. We donated art supplies and held an art and mental health talk session where students created artwork based on the mental health facts they learnt during the session.",
     images: [
-      "/images/past-events/art-1.jpg",
-      "/images/past-events/art-2.jpg",
+      "/images/events-hero.jpg", // placeholder
+      "/images/team-photo.jpg",  // placeholder
     ],
   },
   {
@@ -119,11 +126,30 @@ const PAST_EVENTS = [
     reach: "Transformative makeover",
     fullDescription: "Prismoni Comprehensive High School underwent a transformative makeover as we painted its walls and built new tables, creating a conducive and uplifting learning environment for students.",
     images: [
-      "/images/past-events/revamp-1.jpg",
-      "/images/past-events/revamp-2.jpg",
+      "/images/hero-outreach.jpg",   // placeholder
+      "/images/community-photo.jpg", // placeholder
     ],
   },
 ]
+
+// EventImage renders a gallery photo and falls back to a plain surface panel
+// if the file is missing, so a gap shows as an empty frame rather than the
+// browser's broken-image icon.
+function EventImage({ src, alt, className }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return (
+      <div className={`${className} bg-surface-container flex items-center justify-center`}>
+        <span className="material-symbols-outlined text-on-surface-variant/40 text-3xl" aria-hidden="true">
+          photo_library
+        </span>
+      </div>
+    )
+  }
+
+  return <img src={src} alt={alt} className={className} onError={() => setFailed(true)} />
+}
 
 // ── Slide-over drawer ─────────────────────────────────────────────────────────
 
@@ -189,7 +215,7 @@ function PastEventDrawer({ event, onClose }) {
 
           {/* Hero image — main lightbox preview */}
           <div className="rounded-2xl overflow-hidden border border-outline-variant/20 shadow-md aspect-video">
-            <img
+            <EventImage
               src={event.images[activeImg]}
               alt={`${event.title} photo ${activeImg + 1}`}
               className="w-full h-full object-cover transition-opacity duration-300"
@@ -209,7 +235,7 @@ function PastEventDrawer({ event, onClose }) {
                       : 'border-outline-variant/30 hover:border-primary/50 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <EventImage src={img} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
@@ -242,7 +268,7 @@ function PastEventDrawer({ event, onClose }) {
                   className="rounded-xl overflow-hidden aspect-video border border-outline-variant/20
                              hover:scale-[1.02] hover:shadow-lg transition-all duration-200"
                 >
-                  <img
+                  <EventImage
                     src={img}
                     alt={`Gallery photo ${i + 1}`}
                     className="w-full h-full object-cover"
@@ -300,6 +326,7 @@ export default function Events() {
         title="Where community turns into change."
         subtitle="From clinical programs to public awareness walks, our events create the connections that sustain mental health support at scale."
         imgSrc="/images/events-hero.jpg"
+        fadeTo="surface-container"
       />
 
       {/* ── Map ── */}

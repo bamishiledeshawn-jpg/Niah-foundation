@@ -52,6 +52,9 @@ export default function Home() {
             alt="Niah Foundation team at community outreach event"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-transparent" />
+          {/* Bottom fade — the stats section below is tinted, so fade into that
+              colour rather than letting the photo stop on a hard edge. */}
+          <div className="absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-b from-transparent to-surface-container" />
         </div>
         <div className="relative z-10 max-w-container-max mx-auto px-10 w-full">
           <div className="max-w-2xl">
