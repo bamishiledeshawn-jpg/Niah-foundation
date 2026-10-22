@@ -20,7 +20,7 @@ export default function Navbar() {
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-3">
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0ldPm_mHg9ZUOsIVrVBOIRoLN9CGPgS4KpoW-U7f1FrdcbLvFIjSrqq71FXmYMFIhtMLoudtjlYLjHFkB3E4gdzMk4hsvOMUXTuTL165Y9ixuyF_GRuCHsb7wNIazvLBOpNXZAw6mTbMYXFj1hClXYVRw6D47YOpYvW3wTvCmV_SqvkZqcCjwIYQrN0iihxRZzA6eHXMPtEgGolAC6jQ1haW0eeay6ZhYag7sDvKTXLq5PQllESdSPVmlCtmxtEMjg70khjkz56g"
+            src="/favicon.svg"
             alt="Niah Foundation Logo"
             className="w-10 h-10 object-contain"
           />

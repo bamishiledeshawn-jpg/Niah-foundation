@@ -152,6 +152,7 @@ export default function About() {
         title="Who we are and why we exist."
         subtitle="Niah Foundation was born from a recognition of the silent crisis of mental health in Nigeria and a determination to act."
         imgSrc="/images/about-hero.jpg"
+        imgAlt="Niah Foundation founder speaking at a community gathering"
       />
 
       <section className="py-20">

@@ -326,6 +326,7 @@ export default function Events() {
         title="Where community turns into change."
         subtitle="From clinical programs to public awareness walks, our events create the connections that sustain mental health support at scale."
         imgSrc="/images/events-hero.jpg"
+        imgAlt="Attendees at a Niah Foundation community event"
         fadeTo="surface-container"
       />
 

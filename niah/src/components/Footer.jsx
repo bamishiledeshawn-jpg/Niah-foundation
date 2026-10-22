@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-6">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0ldPm_mHg9ZUOsIVrVBOIRoLN9CGPgS4KpoW-U7f1FrdcbLvFIjSrqq71FXmYMFIhtMLoudtjlYLjHFkB3E4gdzMk4hsvOMUXTuTL165Y9ixuyF_GRuCHsb7wNIazvLBOpNXZAw6mTbMYXFj1hClXYVRw6D47YOpYvW3wTvCmV_SqvkZqcCjwIYQrN0iihxRZzA6eHXMPtEgGolAC6jQ1haW0eeay6ZhYag7sDvKTXLq5PQllESdSPVmlCtmxtEMjg70khjkz56g"
+                src="/favicon.svg"
                 alt="Niah Foundation Logo"
                 className="w-12 h-12 object-contain"
               />
